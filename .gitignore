@@ -44,3 +44,8 @@ desktop.ini
 uploads/
 media/
 static/uploads/
+
+DEVELOPMENT_ROADMAP.txt
+srs.pdf
+alembic
+alembic.ini

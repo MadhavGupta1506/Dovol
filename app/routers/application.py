@@ -107,3 +107,36 @@ async def update_application_status(
         raise HTTPException(status_code=500, detail=f"Database error: {e}")
     await db.refresh(application)
     return application
+
+
+@router.delete("/{application_id}", response_model=dict)
+async def delete_application(
+    application_id: UUID,
+    current_user=Depends(require_roles("volunteer", "ngo")),
+    db: AsyncSession = Depends(get_db)
+):
+    # Fetch the application
+    result = await db.execute(select(Application).where(Application.id == application_id))
+    application = result.scalar_one_or_none()
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    # Check permissions
+    if current_user.role == "volunteer" and application.volunteer_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this application")
+    if current_user.role == "ngo":
+        # Optional: check that NGO owns the task
+        task_result = await db.execute(select(VolunteerTask).where(VolunteerTask.id == application.task_id))
+        task = task_result.scalar_one_or_none()
+        if not task or task.posted_by_id != current_user.id:
+            raise HTTPException(status_code=403, detail="Not authorized to delete this application")
+
+    # Delete the application
+    try:
+        await db.delete(application)
+        await db.commit()
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Database error: {e}")
+
+    return {"detail": "Application deleted successfully"}

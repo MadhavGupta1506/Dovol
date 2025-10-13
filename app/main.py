@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routers import user,task,application
+from .routers import user, skills,task,application
 from .database import engine, Base
 from contextlib import asynccontextmanager
 
@@ -15,3 +15,4 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(user.router)
 app.include_router(task.router)
 app.include_router(application.router)
+app.include_router(skills.router)
