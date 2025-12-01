@@ -13,7 +13,7 @@ from ..auth.auth import hash_password, verify_password
 from ..auth.jwt_handler import create_access_token
 from sqlalchemy.future import select
 from ..auth.dependencies import get_current_user, require_roles
-from ..services.email_service import generate_otp, get_otp_expiration, send_otp_email, send_signup_otp_email, is_otp_expired
+from ..services.email_service_ssl import generate_otp, get_otp_expiration, send_otp_email, send_signup_otp_email, is_otp_expired
 from datetime import datetime, timezone
 router = APIRouter(prefix="/users", tags=["users"])
 

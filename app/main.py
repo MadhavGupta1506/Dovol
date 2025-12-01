@@ -19,11 +19,15 @@ origins = [
     "http://localhost",
     "http://localhost:3000",
     "http://localhost:8000",
+    "http://localhost:5173",  # Vite default
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+    "*",  # Allow all origins (use specific domains in production)
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # Allow all origins for now
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

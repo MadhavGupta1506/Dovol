@@ -1,4 +1,5 @@
 import smtplib
+import ssl
 import random
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -16,7 +17,7 @@ def get_otp_expiration(minutes: int = 10) -> datetime:
 
 async def send_otp_email(email: str, otp: str, user_name: str = "User") -> bool:
     """
-    Send OTP email to user
+    Send OTP email to user using SSL (port 465) - better for Render deployment
     Returns True if email sent successfully, False otherwise
     """
     try:
@@ -135,10 +136,15 @@ async def send_otp_email(email: str, otp: str, user_name: str = "User") -> bool:
         message.attach(part1)
         message.attach(part2)
 
-        # Send email with timeout and better error handling
-        with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=30) as server:
+        # Create SSL context
+        context = ssl.create_default_context()
+        
+        # Use SSL on port 465 instead of STARTTLS on port 587
+        smtp_port = 465 if settings.smtp_port == 587 else settings.smtp_port
+        
+        # Send email using SMTP_SSL
+        with smtplib.SMTP_SSL(settings.smtp_host, smtp_port, context=context, timeout=30) as server:
             server.set_debuglevel(0)
-            server.starttls()
             if settings.smtp_username and settings.smtp_password:
                 server.login(settings.smtp_username, settings.smtp_password)
             server.send_message(message)
@@ -164,7 +170,7 @@ def is_otp_expired(expires_at: datetime) -> bool:
 
 async def send_signup_otp_email(email: str, otp: str) -> bool:
     """
-    Send OTP email for signup verification
+    Send OTP email for signup verification using SSL (port 465) - better for Render deployment
     Returns True if email sent successfully, False otherwise
     """
     try:
@@ -284,10 +290,15 @@ async def send_signup_otp_email(email: str, otp: str) -> bool:
         message.attach(part1)
         message.attach(part2)
 
-        # Send email with timeout and better error handling
-        with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=30) as server:
+        # Create SSL context
+        context = ssl.create_default_context()
+        
+        # Use SSL on port 465 instead of STARTTLS on port 587
+        smtp_port = 465 if settings.smtp_port == 587 else settings.smtp_port
+        
+        # Send email using SMTP_SSL
+        with smtplib.SMTP_SSL(settings.smtp_host, smtp_port, context=context, timeout=30) as server:
             server.set_debuglevel(0)
-            server.starttls()
             if settings.smtp_username and settings.smtp_password:
                 server.login(settings.smtp_username, settings.smtp_password)
             server.send_message(message)
