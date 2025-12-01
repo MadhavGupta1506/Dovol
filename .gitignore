@@ -1,0 +1,51 @@
+# Environment variables (sensitive data)
+.env
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+app/__pycache__/
+app/*/__pycache__/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+database.db
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Log files
+*.log
+logs/
+
+# Alembic cache (keep migration files)
+alembic/__pycache__/
+alembic/versions/__pycache__/
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.bak
+
+# Upload directories (user content)
+uploads/
+media/
+static/uploads/
+
+DEVELOPMENT_ROADMAP.txt
+srs.pdf
+alembic
+alembic.ini
